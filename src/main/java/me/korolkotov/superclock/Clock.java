@@ -28,6 +28,8 @@ public class Clock {
     }
 
     public void test() {
+        System.out.println("background min: " + blocksBackground.getMin() + " max: " + blocksBackground.getMax());
+        System.out.println("numbers min: " + blocksNumbers.getMin() + " max: " + blocksNumbers.getMax());
         fill(blocksBackground, Material.OBSIDIAN);
         fill(blocksNumbers, Material.REDSTONE_BLOCK);
     }
@@ -35,9 +37,9 @@ public class Clock {
     private void fill(BoundingBox boundingBox, Material material) {
         Location min = boundingBox.getMin().toLocation(world);
         Location max = boundingBox.getMax().toLocation(world);
-        for (int x = (int) max.getX(); x > min.getX(); x--) {
-            for (int y = (int) max.getY(); y > min.getY(); y--) {
-                for (int z = (int) max.getZ(); z > min.getX(); z--) {
+        for (int x = (int) max.getX(); x >= (int) min.getX(); x--) {
+            for (int y = (int) max.getY(); y >= (int) min.getY(); y--) {
+                for (int z = (int) max.getZ(); z >= (int) min.getZ(); z--) {
                     Block block = world.getBlockAt(x, y, z);
                     block.setType(material);
                 }

@@ -24,8 +24,8 @@ public class SpawnClockCMD implements TabExecutor {
 
         Player player = (Player) sender;
 
-        BoundingBox backgroundBlocks = null;
-        BoundingBox numbersBlocks = null;
+        BoundingBox backgroundBlocks;
+        BoundingBox numbersBlocks;
 
         Location playerLoc = player.getEyeLocation();
         Block center = player.getEyeLocation().clone().add(player.getEyeLocation().clone().getDirection().multiply(5)).getBlock();
@@ -37,9 +37,9 @@ public class SpawnClockCMD implements TabExecutor {
             Block lastPos = new Location(center.getWorld(), center.getX() - 10, center.getY() - 3, center.getZ()).getBlock();
             numbersBlocks = new BoundingBox(firstPos.getX(), firstPos.getY(), firstPos.getZ(), lastPos.getX(), lastPos.getY(), lastPos.getZ());
             if (center.getZ() - playerLoc.getZ() < 0)
-                addZ = 1;
-            else
                 addZ = -1;
+            else
+                addZ = 1;
             firstPos = firstPos.getLocation().add(0, 0, addZ).getBlock();
             lastPos = lastPos.getLocation().add(0, 0, addZ).getBlock();
             backgroundBlocks = new BoundingBox(firstPos.getX(), firstPos.getY(), firstPos.getZ(), lastPos.getX(), lastPos.getY(), lastPos.getZ());
@@ -49,9 +49,9 @@ public class SpawnClockCMD implements TabExecutor {
             Block lastPos = new Location(center.getWorld(), center.getX(), center.getY() - 3, center.getZ() - 10).getBlock();
             numbersBlocks = new BoundingBox(firstPos.getX(), firstPos.getY(), firstPos.getZ(), lastPos.getX(), lastPos.getY(), lastPos.getZ());
             if (center.getX() - playerLoc.getX() < 0)
-                addX = 1;
-            else
                 addX = -1;
+            else
+                addX = 1;
             firstPos = firstPos.getLocation().add(addX, 0, 0).getBlock();
             lastPos = lastPos.getLocation().add(addX, 0, 0).getBlock();
             backgroundBlocks = new BoundingBox(firstPos.getX(), firstPos.getY(), firstPos.getZ(), lastPos.getX(), lastPos.getY(), lastPos.getZ());

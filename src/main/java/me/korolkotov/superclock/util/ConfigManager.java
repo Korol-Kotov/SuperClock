@@ -26,9 +26,9 @@ public class ConfigManager {
     }
 
     public YamlConfiguration get(String fileName) {
-        if (!configs.containsKey(fileName))
+        if (!configs.containsKey(fileName + ".yml"))
             init(fileName);
 
-        return configs.get(fileName);
+        return configs.get(fileName + ".yml");
     }
 }
