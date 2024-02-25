@@ -35,6 +35,8 @@ public final class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new StickEvent(), this);
 
+        Clock.startScheduler();
+
         getLogger().info("Plugin " + getName() + " is enabled!");
     }
 

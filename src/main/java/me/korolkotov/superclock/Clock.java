@@ -1,55 +1,80 @@
 package me.korolkotov.superclock;
 
+import me.korolkotov.superclock.util.ConfigManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Clock {
 
-    private final Date date;
+    private static final List<Clock> clocks = new ArrayList<>();
+
+    public static void startScheduler() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Clock clock : clocks) {
+                    clock.update();
+                }
+            }
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
     private final BoundingBox blocksBackground;
     private final BoundingBox blocksNumbers;
     private final BlockFace direction;
     private final World world;
 
-    public Clock(Long date, BoundingBox blocksBackground, BoundingBox blocksNumbers, BlockFace direction, World world) {
-        this.date = new Date(date);
+    private final List<Location> locations;
+
+    public Clock(BoundingBox blocksBackground, BoundingBox blocksNumbers, BlockFace direction, World world) {
         this.blocksBackground = blocksBackground;
         this.blocksNumbers = blocksNumbers;
         this.direction = direction;
         this.world = world;
-    }
 
-    public void test() {
-        System.out.println("background min: " + blocksBackground.getMin() + " max: " + blocksBackground.getMax());
-        System.out.println("numbers min: " + blocksNumbers.getMin() + " max: " + blocksNumbers.getMax());
-        fill(blocksBackground, Material.OBSIDIAN);
-        fill(blocksNumbers, Material.REDSTONE_BLOCK);
-    }
+        this.locations = new ArrayList<>();
+        Location start = blocksNumbers.getMin().toLocation(world).add(0, 4, 0);
+        locations.add(start.clone());
 
-    private void fill(BoundingBox boundingBox, Material material) {
-        Location min = boundingBox.getMin().toLocation(world);
-        Location max = boundingBox.getMax().toLocation(world);
-        for (int x = (int) max.getX(); x >= (int) min.getX(); x--) {
-            for (int y = (int) max.getY(); y >= (int) min.getY(); y--) {
-                for (int z = (int) max.getZ(); z >= (int) min.getZ(); z--) {
-                    Block block = world.getBlockAt(x, y, z);
-                    block.setType(material);
-                }
+        int[] multipliers = {5, 4, 3, 5};
+
+        for (int multiplier : multipliers) {
+            if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
+                start = start.clone().add(multiplier * -direction.getModZ(), 0, 0);
+            } else {
+                start = start.clone().add(0, 0, multiplier * direction.getModX());
             }
+            locations.add(start.clone());
         }
 
-        for (int x = 0; x <= 4; x++) {
-            for (int y = 0; y <= 7; y++) {
-                
-            }
+        update();
+
+        clocks.add(this);
+    }
+
+    public void update() {
+        Calendar time = Calendar.getInstance();
+        List<Character> chars = getCharList(time);
+        for (Location location : locations) {
+            String chr = chars.get(locations.indexOf(location)).toString().replace(":", "dots");
+            ConfigManager.instance.setSchematic(location, chr, direction);
         }
+    }
+
+    private List<Character> getCharList(Calendar calendar) {
+        List<Character> result = new ArrayList<>();
+        String str = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        for (int i = 0; i < str.length(); i++) {
+            result.add(str.charAt(i));
+        }
+        return result;
     }
 }

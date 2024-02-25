@@ -4,3 +4,6 @@ not_enough_args: '&cНеверное количество аргументов!'
 not_enough_perms: '&cНедостаточно прав для выполнения данной команды!'
 
 schematic_saved: '&aСхематика &e%name% &aуспешно сохранена!'
+schematic_placed: '&aСхематика &e%name% &aуспешно поставлена!'
+
+position_selected: '&aВыбрана позиция %location%'

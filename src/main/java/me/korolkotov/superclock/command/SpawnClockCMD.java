@@ -57,15 +57,12 @@ public class SpawnClockCMD implements TabExecutor {
             backgroundBlocks = new BoundingBox(firstPos.getX(), firstPos.getY(), firstPos.getZ(), lastPos.getX(), lastPos.getY(), lastPos.getZ());
         }
 
-        Clock clock = new Clock(
-                System.currentTimeMillis(),
+        new Clock(
                 backgroundBlocks,
                 numbersBlocks,
-                center.getFace(precenter),
+                player.getFacing(),
                 playerLoc.getWorld()
         );
-
-        clock.test();
 
         ChatUtil.sendMessage(player, "test");
 
