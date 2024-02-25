@@ -5,6 +5,12 @@ api-version: '1.16'
 authors: [KoroLKotov, Masti]
 description: Plugin for tournament
 
+permissions:
+  superclock.setschematic:
+    default: op
+
 commands:
   spawnclock:
     usage: /spawnclock
+  sch:
+    usage: /sch [0;1;2;3;4;5;6;7;8;9;dots]

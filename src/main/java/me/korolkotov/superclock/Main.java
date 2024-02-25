@@ -1,11 +1,23 @@
 package me.korolkotov.superclock;
 
+import me.korolkotov.superclock.command.SchCMD;
 import me.korolkotov.superclock.command.SpawnClockCMD;
+import me.korolkotov.superclock.event.StickEvent;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.swing.text.PlainDocument;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class Main extends JavaPlugin {
 
     private static Main instance;
+
+    private static Map<UUID, Block> blocks = new HashMap<>();
 
     public static Main getInstance() {
         return instance;
@@ -18,11 +30,24 @@ public final class Main extends JavaPlugin {
         getCommand("spawnclock").setExecutor(new SpawnClockCMD());
         getCommand("spawnclock").setTabCompleter(new SpawnClockCMD());
 
+        getCommand("sch").setExecutor(new SchCMD());
+        getCommand("sch").setTabCompleter(new SchCMD());
+
+        getServer().getPluginManager().registerEvents(new StickEvent(), this);
+
         getLogger().info("Plugin " + getName() + " is enabled!");
     }
 
     @Override
     public void onDisable() {
         getLogger().info("Plugin " + getName() + " is disabled!");
+    }
+
+    public Map<UUID, Block> getBlocks() {
+        return blocks;
+    }
+
+    public void setPlayerBlock(Player player, Block block) {
+        blocks.put(player.getUniqueId(), block);
     }
 }

@@ -12,7 +12,7 @@ public class ChatUtil {
     }
 
     public static void sendMessage(CommandSender sender, String text) {
-        sender.sendMessage(text);
+        sender.sendMessage(format(text));
     }
 
     public static void sendConfigMessage(CommandSender sender, String path) {
