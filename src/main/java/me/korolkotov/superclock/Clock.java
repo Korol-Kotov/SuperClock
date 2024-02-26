@@ -10,6 +10,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 public class Clock {
@@ -31,29 +38,14 @@ public class Clock {
     private final BoundingBox blocksNumbers;
     private final BlockFace direction;
     private final World world;
+    private final String timezone;
 
-    private final List<Location> locations;
-
-    public Clock(BoundingBox blocksBackground, BoundingBox blocksNumbers, BlockFace direction, World world) {
+    public Clock(BoundingBox blocksBackground, BoundingBox blocksNumbers, BlockFace direction, World world, String timezone) {
         this.blocksBackground = blocksBackground;
         this.blocksNumbers = blocksNumbers;
         this.direction = direction;
         this.world = world;
-
-        this.locations = new ArrayList<>();
-        Location start = blocksNumbers.getMin().toLocation(world).add(0, 4, 0);
-        locations.add(start.clone());
-
-        int[] multipliers = {5, 4, 3, 5};
-
-        for (int multiplier : multipliers) {
-            if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
-                start = start.clone().add(multiplier * -direction.getModZ(), 0, 0);
-            } else {
-                start = start.clone().add(0, 0, multiplier * direction.getModX());
-            }
-            locations.add(start.clone());
-        }
+        this.timezone = timezone;
 
         update();
 
@@ -61,20 +53,87 @@ public class Clock {
     }
 
     public void update() {
-        Calendar time = Calendar.getInstance();
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of(timezone));
+        LocalDateTime time = zonedDateTime.toLocalDateTime();
         List<Character> chars = getCharList(time);
+        List<List<Integer>> nums = getNums(format(time, ConfigManager.instance.get("config").getString("format")));
+        List<Location> locations = new ArrayList<>();
+        Location loc = blocksNumbers.getMax().toLocation(world);
+        if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH)
+            loc = loc.clone().add(-5 * -direction.getModZ(), 0, 0);
+        else
+            loc = loc.clone().add(0, 0, -5 * direction.getModX());
+        for (List<Integer> slot : nums) {
+            for (int i = 0; i < slot.size(); i++) {
+                if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH) {
+                    if (i == 0 && locations.size() != 0)
+                        loc = loc.clone().add(3 * -direction.getModZ(), 0, 0);
+                    else
+                        loc = loc.clone().add(5 * -direction.getModZ(), 0, 0);
+                    locations.add(loc);
+                } else {
+                    if (i == 0 && locations.size() != 0)
+                        loc = loc.clone().add(0, 0, 3 * direction.getModX());
+                    else
+                        loc = loc.clone().add(0, 0, 5 * direction.getModX());
+                    locations.add(loc);
+                }
+            }
+            if (nums.indexOf(slot) != nums.size() - 1 && locations.size() < 8) {
+                if (direction == BlockFace.NORTH || direction == BlockFace.SOUTH)
+                    loc = loc.clone().add(4 * -direction.getModZ(), 0, 0);
+                else {
+                    loc = loc.clone().add(0, 0, 4 * direction.getModX());
+                }
+                locations.add(loc);
+            }
+        }
+
         for (Location location : locations) {
             String chr = chars.get(locations.indexOf(location)).toString().replace(":", "dots");
+            Location bgLoc = location.clone().add(direction.getModX(), direction.getModY(), direction.getModZ());
+            if (chr.length() == 1 && Character.isDigit(chr.toCharArray()[0])) {
+                ConfigManager.instance.setSchematic(bgLoc, "bg_num", direction);
+                if (locations.indexOf(location) < locations.size() - 1 && location.distance(locations.get(locations.indexOf(location) + 1)) == 5D) {
+                    if (direction == BlockFace.SOUTH || direction == BlockFace.NORTH)
+                        bgLoc = bgLoc.clone().add(4 * -direction.getModZ(), 0, 0);
+                    else
+                        bgLoc = bgLoc.clone().add(0, 0, 4 * direction.getModX());
+                    ConfigManager.instance.setSchematic(bgLoc, "bg_space", direction);
+                }
+            } else if (chr.equals("dots"))
+                ConfigManager.instance.setSchematic(bgLoc, "bg_dots", direction);
             ConfigManager.instance.setSchematic(location, chr, direction);
         }
     }
 
-    private List<Character> getCharList(Calendar calendar) {
+    private List<Character> getCharList(LocalDateTime time) {
         List<Character> result = new ArrayList<>();
-        String str = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        String str = format(time, ConfigManager.instance.get("config").getString("format"));
         for (int i = 0; i < str.length(); i++) {
             result.add(str.charAt(i));
         }
+        return result;
+    }
+
+    private String format(LocalDateTime time, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return formatter.format(time);
+    }
+
+    private List<List<Integer>> getNums(String str) {
+        List<String> strings = Arrays.asList(str.split(":"));
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (String numsStr : strings) {
+            List<Integer> nums = new ArrayList<>();
+            for (char num : numsStr.toCharArray()) {
+                String numStr = String.valueOf(num);
+                nums.add(Integer.valueOf(numStr));
+            }
+            result.add(nums);
+        }
+
         return result;
     }
 }

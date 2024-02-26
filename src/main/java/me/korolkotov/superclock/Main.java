@@ -3,6 +3,7 @@ package me.korolkotov.superclock;
 import me.korolkotov.superclock.command.SchCMD;
 import me.korolkotov.superclock.command.SpawnClockCMD;
 import me.korolkotov.superclock.event.StickEvent;
+import me.korolkotov.superclock.util.ConfigManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -35,6 +36,7 @@ public final class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new StickEvent(), this);
 
+        ConfigManager.instance.initResources();
         Clock.startScheduler();
 
         getLogger().info("Plugin " + getName() + " is enabled!");

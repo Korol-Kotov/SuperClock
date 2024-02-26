@@ -22,7 +22,13 @@ public class ConfigManager {
     public Map<String, YamlConfiguration> configs = new HashMap<>();
 
     public void initResources() {
-
+        String[] names = {"config", "messages", "chars/dots", "chars/bg_num", "chars/bg_space", "chars/bg_dots"};
+        for (String name : names) {
+            init(name);
+        }
+        for (int i = 0; i < 10; i++) {
+            init("chars/" + i);
+        }
     }
 
     public void init(String fileName) {
@@ -49,6 +55,7 @@ public class ConfigManager {
 
         if (!file.exists()) {
             try {
+                file.getParentFile().mkdirs();
                 file.createNewFile();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -58,8 +65,10 @@ public class ConfigManager {
         YamlConfiguration schematic = YamlConfiguration.loadConfiguration(file);
 
         int maxXZ = 4;
-        if (fileName.equalsIgnoreCase("dots"))
+        if (fileName.equalsIgnoreCase("dots") || fileName.equalsIgnoreCase("bg_dots"))
             maxXZ = 3;
+        else if (fileName.equalsIgnoreCase("bg_space"))
+            maxXZ = 1;
         for (int y = 0; y < 7; y++) {
             List<String> strings = new ArrayList<>();
             for (int xz = 0; xz < maxXZ; xz++) {
@@ -122,11 +131,11 @@ public class ConfigManager {
         return schematics;
     }
 
-    public void setSchematic(Location location, String chr, BlockFace blockFace) {
+    public boolean setSchematic(Location location, String chr, BlockFace blockFace) {
         Map<String, List<Material>> schem = getSchematic(chr);
         if (schem == null) {
-            System.out.println("null");
-            return;
+            Main.getInstance().getLogger().warning(ChatUtil.format("&cСхематика &e" + chr + " &cне найдена!"));
+            return false;
         }
         if (blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH) {
             for (String num : schem.keySet()) {
@@ -139,6 +148,8 @@ public class ConfigManager {
                         block.setType(material);
                 }
             }
+
+            return true;
         } else if (blockFace == BlockFace.WEST || blockFace == BlockFace.EAST) {
             for (String num : schem.keySet()) {
                 List<Material> materials = schem.get(num);
@@ -150,6 +161,10 @@ public class ConfigManager {
                         block.setType(material);
                 }
             }
+
+            return true;
         }
+
+        return false;
     }
 }
