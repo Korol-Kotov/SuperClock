@@ -1,0 +1,12 @@
+not_player: '&cЭту команду может использовать только игрок!'
+not_selected: '&cВыберите верхний левый блок палкой'
+not_enough_args: '&cНеверное количество аргументов!'
+not_enough_perms: '&cНедостаточно прав для выполнения данной команды!'
+
+schematic_saved: '&aСхематика &e%name% &aуспешно сохранена!'
+schematic_placed: '&aСхематика &e%name% &aуспешно поставлена!'
+schematic_failed: '&cНе удалось поставить схематику &e%name%'
+
+position_selected: '&aВыбрана позиция %location%'
+
+clock_spawned: '&aЧасы успешно поставлены!'

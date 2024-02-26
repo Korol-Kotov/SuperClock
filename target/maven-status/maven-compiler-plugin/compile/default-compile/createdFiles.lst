@@ -1,0 +1,8 @@
+me\korolkotov\superclock\util\ChatUtil.class
+me\korolkotov\superclock\Clock$1.class
+me\korolkotov\superclock\Main.class
+me\korolkotov\superclock\util\ConfigManager.class
+me\korolkotov\superclock\Clock.class
+me\korolkotov\superclock\event\StickEvent.class
+me\korolkotov\superclock\command\SpawnClockCMD.class
+me\korolkotov\superclock\command\SchCMD.class
