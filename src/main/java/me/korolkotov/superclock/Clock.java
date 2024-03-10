@@ -1,23 +1,18 @@
 package me.korolkotov.superclock;
 
 import me.korolkotov.superclock.util.ConfigManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Clock {
 
@@ -120,7 +115,7 @@ public class Clock {
     }
 
     private List<List<Integer>> getNums(String str) {
-        List<String> strings = Arrays.asList(str.split(":"));
+        String[] strings = str.split(":");
         List<List<Integer>> result = new ArrayList<>();
 
         for (String numsStr : strings) {

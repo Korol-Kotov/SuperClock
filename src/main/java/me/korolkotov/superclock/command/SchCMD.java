@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,13 +21,11 @@ public class SchCMD implements TabExecutor {
     private final String[] schematicNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "dots", "bg_num", "bg_space", "bg_dots"};
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player player)) {
             ChatUtil.sendConfigMessage(sender, "not_player");
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (player.hasPermission("superclock.setschematic")) {
             if (args.length == 0) {
@@ -70,7 +69,7 @@ public class SchCMD implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
             return getEntered(args[0], List.of("place", "set"));
         }

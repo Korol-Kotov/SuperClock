@@ -22,12 +22,10 @@ import java.util.TimeZone;
 public class SpawnClockCMD implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             ChatUtil.sendConfigMessage(sender, "not_player");
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (!player.hasPermission("superclock.spawnclock")) {
             ChatUtil.sendConfigMessage(player, "not_enough_perms");

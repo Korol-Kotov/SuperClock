@@ -16,7 +16,7 @@ public final class Main extends JavaPlugin {
 
     private static Main instance;
 
-    private static Map<UUID, Block> blocks = new HashMap<>();
+    private static final Map<UUID, Block> blocks = new HashMap<>();
 
     public static Main getInstance() {
         return instance;
@@ -29,9 +29,6 @@ public final class Main extends JavaPlugin {
         getCommand("spawnclock").setExecutor(new SpawnClockCMD());
         getCommand("spawnclock").setTabCompleter(new SpawnClockCMD());
 
-        getCommand("spawnpclock").setExecutor(new SpawnPClockCMD());
-        getCommand("spawnpclock").setTabCompleter(new SpawnPClockCMD());
-
         getCommand("sch").setExecutor(new SchCMD());
         getCommand("sch").setTabCompleter(new SchCMD());
 
@@ -40,12 +37,12 @@ public final class Main extends JavaPlugin {
         ConfigManager.instance.initResources();
         Clock.startScheduler();
 
-        getLogger().info("Plugin " + getName() + " is enabled!");
+        getLogger().info("Plugin " + getName() + " enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Plugin " + getName() + " is disabled!");
+        getLogger().info("Plugin " + getName() + " disabled!");
     }
 
     public Map<UUID, Block> getBlocks() {
