@@ -34,14 +34,12 @@ public class Clock {
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
-    private final BoundingBox blocksBackground;
     private final BoundingBox blocksNumbers;
     private final BlockFace direction;
     private final World world;
     private final String timezone;
 
-    public Clock(BoundingBox blocksBackground, BoundingBox blocksNumbers, BlockFace direction, World world, String timezone) {
-        this.blocksBackground = blocksBackground;
+    public Clock(BoundingBox blocksNumbers, BlockFace direction, World world, String timezone) {
         this.blocksNumbers = blocksNumbers;
         this.direction = direction;
         this.world = world;

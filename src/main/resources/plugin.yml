@@ -9,6 +9,12 @@ permissions:
   superclock.setschematic:
     default: op
 
+  superclock.spawnclock:
+    default: op
+
+  superclock.select:
+    default: op
+
 commands:
   spawnclock:
     usage: /spawnclock

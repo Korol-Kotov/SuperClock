@@ -17,7 +17,7 @@ public class StickEvent implements Listener {
     private void onBlockClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             Player player = event.getPlayer();
-            if (player.isOp()) {
+            if (player.hasPermission("superclock.select")) {
                 if (player.getInventory().getItemInMainHand().getType() == Material.STICK) {
                     event.setCancelled(true);
                     Main.getInstance().setPlayerBlock(player, event.getClickedBlock());

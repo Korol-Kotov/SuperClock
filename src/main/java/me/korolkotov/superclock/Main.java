@@ -4,12 +4,10 @@ import me.korolkotov.superclock.command.SchCMD;
 import me.korolkotov.superclock.command.SpawnClockCMD;
 import me.korolkotov.superclock.event.StickEvent;
 import me.korolkotov.superclock.util.ConfigManager;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.swing.text.PlainDocument;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,6 +28,9 @@ public final class Main extends JavaPlugin {
 
         getCommand("spawnclock").setExecutor(new SpawnClockCMD());
         getCommand("spawnclock").setTabCompleter(new SpawnClockCMD());
+
+        getCommand("spawnpclock").setExecutor(new SpawnPClockCMD());
+        getCommand("spawnpclock").setTabCompleter(new SpawnPClockCMD());
 
         getCommand("sch").setExecutor(new SchCMD());
         getCommand("sch").setTabCompleter(new SchCMD());
